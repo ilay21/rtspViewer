@@ -1,0 +1,28 @@
+<div class="container">
+        <div class="row top-padding">
+          <div class="col-10">
+            <h3>Add New RTSP URL</h3>
+          </div>
+          <div class="col-2 align-right">
+            <button ng-click="$ctrl.logout()" class="btn btn-primary">Logout</button>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-sm">
+            <form>
+              <div class="form-group">
+                <label for="rtsp">RTSP URL</label>
+                <input type="text" ng-model="$ctrl.rtspUrl" class="form-control" id="rtsp" placeholder="Inser RTSP URL">
+              </div>
+            </form>
+      
+          </div>
+        </div>
+      
+        <div class="row">
+          <div class="col-sm align-center">
+            <button ng-click="$ctrl.add()" class="btn btn-primary">Add</button>
+          </div>
+        </div>
+      </div>
+      

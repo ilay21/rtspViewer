@@ -1,54 +1,52 @@
-const experess = require('express');
+const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const User = require('./models/User')
 const jwt = require('jwt-simple');
+const login = require('./services/login');
+const register = require('./services/register');
+const rtspurl = require('./services/rtspurl');
 
-const app = experess();
-
-let list = [
-    { url: 'www.google.com', user: 'ilay' },
-    { url: 'www.walls.co.il', user: 'ad' },
-    { url: 'www.ynet.co.il', user: 'racheli' }
-]
+const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get('/list', (req, res) => {
-    res.send(list);
-})
+function unauthorizedResponse(res, message) {
+	return res.status(401).send({
+		message
+	});
+}
 
-app.post('/register', (req, res) => {
+function checkAuth(req, res, next) {
+	if (!req.header('Authorization')) return unauthorizedResponse(res, 'Unauthorized - missing auth header');
 
-    const userData = req.body;
-    let user = new User(userData);
+	let token = req.header('Authorization');
+	let payload = jwt.decode(token, '123456');
+    if (!payload) return unauthorizedResponse(res, 'Auth header invalid');
+    req.userId = payload.sub;
+    next();
+}
 
-    user.save((err, result) => {
-        if (err) console.log('saving user error')
-        res.sendStatus(200);
+app.post('/register', register)
+app.post('/login', login)
+app.post('/rtspurl', checkAuth, rtspurl)
 
-    })
-})
+// serve all asset files from necessary directories
+app.use("/js", express.static(__dirname + "/../frontend/js/"));
+app.use("/lib", express.static(__dirname + "/../frontend/node_modules/"));
+app.use("/css", express.static(__dirname + "/../frontend/css/"));
+app.use("/views", express.static(__dirname + "/../frontend/views/"));
 
-app.post('/login', async(req, res) => {
-
-    const userData = req.body;
-
-    const user = await User.findOne({ username: userData.username });
-
-    if (!user || user.pwd !== userData.pwd)
-        res.status(401).send({ messgae: 'Username or Password invalid' });
-    
-        
-    let payload = {}
-    let token = jwt.encode(payload, '123456')
-    res.status(200).send({token});
-})
-
+// serve index.html for all remaining routes, in order to leave routing up to angular
+app.all("/*", function (req, res, next) {
+	res.sendFile("index.html", {
+		root: __dirname + "/../frontend/"
+	});
+});
 mongoose.connect('mongodb://admin:admin@ds137464.mlab.com:37464/rtspview', err => {
-    if (!err) console.log('connected to mongo');
+	if (!err) console.log('connected to mongo');
 })
 
 app.listen(3000);

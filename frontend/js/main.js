@@ -4,16 +4,23 @@ var app = angular.module("app", ['ui.router', 'ui.bootstrap'])
     $stateProvider
       .state("login", {
         url: "/",
-        component: "loginComponent",
-
+        component: "loginComponent"
       })
       .state("register", {
         url: "/register",
-        component: "registerComponent",
+        component: "registerComponent"
       })
       .state("addNew", {
         url: "/new",
-        component: "addNewComponent",
+        component: "addNewComponent"
+      })
+      .state("list", {
+        url: "/list",
+        component: "listComponent"
+      })
+      .state("player", {
+        url: "/player",
+        component: "playerComponent",
+        params: {rtspUrl: null}
       })
   })
-

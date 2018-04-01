@@ -4,25 +4,30 @@ angular.module("app")
     controller: "addNewCtrl"
 
   })
-  .controller('addNewCtrl', ['$http', '$state',function ($http, $state) {
+  .controller('addNewCtrl', ['$http', '$state', function ($http, $state) {
     var ctrl = this;
+    ctrl.rtspUrl = '';
 
-
-    ctrl.logout = function(){
-        localStorage.removeItem('token');
-        $state.go('login');
+    ctrl.logout = function () {
+      localStorage.removeItem('token');
+      $state.go('login');
     }
 
-    ctrl.add = function(){
+    ctrl.add = function () {
+      if (ctrl.rtspUrl) {
         var token = localStorage.getItem('token');
-        console.log(token);
         $http.post('http://localhost:3000/rtspurl', {
-            url: 'lsls'
-        }, {headers: {
-            Authorization: token
-        }})
-        .then(function(res){
+            url: ctrl.rtspUrl
+          }, {
+            headers: {
+              Authorization: token
+            }
+          })
+          .then(function (res) {
+            ctrl.rtspUrl = '';
             console.log(res);
-        })
+          })
+      }
+
     }
   }])

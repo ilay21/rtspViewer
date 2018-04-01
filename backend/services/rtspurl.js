@@ -1,17 +1,23 @@
 const RtspUrl = require('./../models/RtspUrl');
 const User = require('./../models/User');
 
-module.exports = (req, res) => {
-    const {url} = req.body;
+module.exports = {
+	add: (req, res) => {
+		const { url } = req.body;
 
-    console.log(req.userId);
+		let rtspObj = new RtspUrl({
+			url,
+			username: req.userName
+		});
 
-    User.findOne()
-    //let user = new RtspUrl();
-
-    // user.save((err, result) => {
-    //     if (err) console.log('saving user error')
-    //     res.sendStatus(200);
-    // })
-    res.sendStatus(200);
+		rtspObj.save((err, result) => {
+			if (err) console.log('saving rtsp error')
+			res.sendStatus(200);
+		})
+	},
+	get: async (req, res) => {
+        let list = await RtspUrl.find({});
+        if (!list) res.sendStatus(404).send({message: 'Not found'});
+        res.send(list);
+	}
 }

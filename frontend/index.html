@@ -1,32 +1,31 @@
 <!doctype html>
 <html ng-app="app">
-  <head>
-    <script src="/lib/angular/angular.min.js"></script>
-    <script src="/lib/@uirouter/angularjs/release/angular-ui-router.js"></script>
-    <script src="/lib/jquery/jquery.min.js"></script>
-    <script src="/lib/popper.js/dist/umd/popper.min.js"></script>
-    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
-    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+
+<head>
+  <script src="/lib/angular/angular.min.js"></script>
+  <script src="/lib/@uirouter/angularjs/release/angular-ui-router.js"></script>
+  <script src="/lib/jquery/jquery.min.js"></script>
+  <script src="/lib/popper.js/dist/umd/popper.min.js"></script>
+  <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
+  <script type="text/javascript" src="/js/vxgplayer-1.8.31/vxgplayer-1.8.31.min.js"></script>
+  <link href="/js/vxgplayer-1.8.31/vxgplayer-1.8.31.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
 
 
-    <script src="/js/main.js"></script>
-    <script src="/js/components/login.js"></script>
-    <script src="/js/components/register.js"></script>
-    <script src="/js/components/addNew.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/components/login.js"></script>
+  <script src="/js/components/register.js"></script>
+  <script src="/js/components/addNew.js"></script>
+  <script src="/js/components/list.js"></script>
+  <script src="/js/components/player.js"></script>
 
-    <link rel="stylesheet" href="/css/style.css">
-  </head>
-  <body>
-    <!-- <div>
-      <label>Name:</label>
-      <input type="text" ng-model="yourName" placeholder="Enter a name here">
-      <a ui-sref="register">register</a>
-      <hr>
-      <h1>Hello {{yourName}}!</h1>
-    </div> -->
-    <ui-view></ui-view>
-  </body>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-  
+<body>
+  <ui-view></ui-view>
+</body>
+
+
 </html>

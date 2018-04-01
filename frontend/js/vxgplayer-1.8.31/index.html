@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Media Player PNaCl</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+	<meta name="author" content="videoexpertsgroup" />
+	<meta name="copyright" lang="ru" content="videoexpertsgroup" />
+	<meta name="description" content="Demo VXG Media Player for Chrome" />
+	<meta name="keywords" content=""/>
+	<!-- vxgplayer -->
+	<script type="text/javascript" src="vxgplayer-1.8.31.min.js"></script>
+	<link href="vxgplayer-1.8.31.min.css" rel="stylesheet"/>
+
+	<!-- demo page -->
+	<link href="https://www.videoexpertsgroup.com/nacl_player_api/demo.min.css" rel="stylesheet"/>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link href="https://www.videoexpertsgroup.com/nacl_player_api/zenburn.min.css" rel="stylesheet">
+	<script src="https://www.videoexpertsgroup.com/nacl_player_api/highlight.min.js"></script>
+	<script>
+		hljs.initHighlightingOnLoad();
+		var indexPlayer = 1;
+		function createPlayer(){
+			indexPlayer++;
+			var playerId = 'vxg_media_player' + indexPlayer;
+			var div = document.createElement('div');
+			div.setAttribute("id", playerId);
+			div.setAttribute("class", "vxgplayer");
+			var runtimePlayers = document.getElementById('runtimePlayers');
+			runtimePlayers.appendChild(div);
+			vxgplayer(playerId, {
+				url: '',
+				nmf_path: 'media_player.nmf',
+				nmf_src: 'pnacl/Release/media_player.nmf',
+				latency: 300000,
+				aspect_ratio_mode: 1,
+				autohide: 3,
+				controls: true,
+				avsync: true,
+				autoreconnect: 1
+			}).ready(function(){
+				console.log(' =>ready player '+playerId);
+				vxgplayer(playerId).src(document.getElementById('url_input').value);
+				vxgplayer(playerId).play();
+				console.log(' <=ready player '+playerId);
+			});
+		}
+		function removeLatestPlayer(){
+			if(indexPlayer > 1){
+				var playerId = 'vxg_media_player' + indexPlayer;
+				vxgplayer(playerId).dispose();
+				document.getElementById('vxg_media_player' + indexPlayer).remove();
+				indexPlayer--;
+			}
+		}
+		
+		function customDigitalZoomOn(){
+			vxgplayer('vxg_media_player1').custom_digital_zoom(true);
+			digzoom_on.style.display = "none";
+			digzoom_off.style.display = "";
+			digzoom_params.style.display = "";
+			
+		}
+		function customDigitalZoomOff(){
+			vxgplayer('vxg_media_player1').custom_digital_zoom(false);
+			digzoom_on.style.display = "";
+			digzoom_off.style.display = "none";
+			digzoom_params.style.display = "none";
+		}
+			
+		function setCustomDigitalZoom(){
+			try{
+				vxgplayer('vxg_media_player1').setCustomDigitalZoom(parseInt(digzoom_ratio.value,10), parseInt(digzoom_x.value,10), parseInt(digzoom_y.value,10))
+			}catch(e){
+				alert(e);
+			}
+		}
+		
+		function resetCustomDigitalZoom(){
+			vxgplayer('vxg_media_player1').setCustomDigitalZoom(100, 0, 0);
+		}
+		
+	</script>
+</head>
+<body>
+	
+		<div class="menu-fixed">
+			<div class="menu">
+				<div class="menu-left">
+					<a href="?">VXG Media Player (1.8.31)</a>
+				</div>
+				<div class="menu-right">
+					<a class="menu-item-right" href="#demo">Demo</a>
+					<a class="menu-item-right" href="#examples">Examples</a>
+					<a class="menu-item-right" href="#support">Support</a>
+					<a class="menu-item-right" href="#download">Download</a>
+					<a class="menu-item-right" href="#jsapi">API</a>
+				</div>
+			</div>
+		</div>
+		<div class="content-absolute">
+			<div class="content">
+				<a class="link-top" name="demo">.</a>
+				<h1>Demo</h1>
+				Some functions for test (Only for first player):
+				<ul>
+					<li>
+						URL:
+						<input id="url_input" type="text" size="60" value="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov">
+						<button onclick="vxgplayer('vxg_media_player1').src(document.getElementById('url_input').value);">Set</button>
+					</li>
+					<li>
+						Max latency(ms):
+						<input id="url_latency" type="number" size="5" value="300000">
+						<button onclick="vxgplayer('vxg_media_player1').latency(document.getElementById('url_latency').value);">Set</button>
+					</li>
+					<li>
+						Aspect Ratio:
+						<button onclick="vxgplayer('vxg_media_player1').aspectRatioMode(1);">Fit-to-Screen</button>
+						<button onclick="vxgplayer('vxg_media_player1').aspectRatioMode(2);">Crop</button>
+						<button onclick="vxgplayer('vxg_media_player1').aspectRatio(false);">Disable</button>
+					</li>
+					<li>
+						Attribute display:
+						<button onclick="document.getElementById('vxg_media_player1').style.display='none';">None</button>
+						<button onclick="document.getElementById('vxg_media_player1').style.display='inline-block';">Inline-block</button>
+					</li>
+					<li>
+						Attribute visibility:
+						<button onclick="document.getElementById('vxg_media_player1').style.visibility='hidden';">Hidden</button>
+						<button onclick="document.getElementById('vxg_media_player1').style.visibility='';">Empty</button>
+					</li>
+					<li>
+						Autoreconnect: 
+						<button onclick="vxgplayer('vxg_media_player1').autoreconnect(1);">On</button>
+						<button onclick="vxgplayer('vxg_media_player1').autoreconnect(0);">Off</button>
+					</li>
+					<li>Run-Time creation players: 
+						<button onclick="createPlayer();">create new</button>
+						<button onclick="removeLatestPlayer();">remove latest</button>
+					</li>
+					<li>Change Digital Zoom (Ratio, X, Y):
+						<button id="digzoom_on" onclick="customDigitalZoomOn()">On</button>
+						<button id="digzoom_off" onclick="customDigitalZoomOff()" style="display: none;">Off</button>
+						<div id="digzoom_params" style="display: none;">
+							Ratio[100..500] = <input type="text" id="digzoom_ratio" size=3 value="300">
+							X = <input type="text" id="digzoom_x" size=5 value="426">
+							Y = <input type="text" id="digzoom_y" size=5 value="320">
+							<button onclick="setCustomDigitalZoom()">Set</button>
+							<button onclick="resetCustomDigitalZoom()">Reset</button>
+						<div>
+					</li>
+				</ul>
+
+				<div id="runtimePlayers">
+				<div id="vxg_media_player1" class="vxgplayer" url="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov" aspect-ratio latency="3000000" autostart controls avsync></div>
+				</div>
+
+				<a class="link-top" name="examples">.</a>
+				<h1>Examples</h1>
+				<ul>
+					<li><a href="iframeexample.html" target="_blank">Player in iframe example</a></li>
+					<li><a href="multiplayersexample.html" target="_blank">Multiplayers example</a></li>
+					<li><a href="angular2example-1.8.31.zip" target="_blank">Angular 2 Example</a></li>
+				</ul>
+				
+				<a class="link-top" name="support">.</a>
+				<h1>Support</h1>
+				<a href="http://www.videoexpertsgroup.com/chrome-media-player-plug-in/" target="_blank">Visit the Video Experts Group' Media Player Plug-in page for support</a>
+
+				<a class="link-top" name="download">.</a>
+				<h1>Download</h1>
+				<a href="vxgplayer-1.8.31.zip" target="_blank">vxgplayer-1.8.31.zip</a>
+				<p>Please note that you have to place the unzipped package on a Web Server. For testing it locally on your PC you have to run a Web Server on your local PC.
+					We recommend to use a single binary Web Server like <a target="_blank" href="https://www.cesanta.com/products#binary">Mongoose</a> for testing.
+					Just copy the Web Server binary into the unzipped package folder and run it.</p>
+				<a class="link-top" name="jsapi">.</a>
+				<h1>API</h1>
+				<h2>HTML</h2>
+
+<h3>Include css + js</h3>
+
+<pre><code>&lt;head&gt;
+...
+    &lt;script type="text/javascript" src="vxgplayer-1.8.31.min.js"&gt;&lt;/script&gt;
+    &lt;link href="vxgplayer-1.8.31.min.css" rel="stylesheet"/&gt; 
+...
+&lt;/head&gt;
+</code></pre>
+
+<h3>Div element for player</h3>
+
+<pre><code>&lt;div class="vxgplayer"
+    id="vxg_media_player1" 
+    width="640"
+    height="480"
+    url="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov"
+    nmf-src="pnacl/Release/media_player.nmf"
+    nmf-path="media_player.nmf"
+    useragent-prefix="MMP/3.0"
+    latency="10000"
+    autohide="2"
+    volume="0.7"
+    avsync
+    controls
+    mute
+    aspect-ratio
+    aspect-ratio-mode="1"
+    auto-reconnect
+    connection-timeout="5000"
+    connection-udp="0"
+    custom-digital-zoom&gt;&lt;/div&gt;
+</code></pre>
+
+<h4>Attributes:</h4>
+
+<ul>
+<li><strong>id</strong> - unique id of player</li>
+<li><strong>class</strong> must be 'vxgplayer' - for automatically init all players after load body</li>
+<li><strong>width</strong> - width of player, integer </li>
+<li><strong>height</strong> - height of player, integer</li>
+<li><strong>url</strong> - link to rtsp video</li>
+<li><strong>nmf-src</strong> - link to plugin, default value: 'pnacl/Release/media_player.nmf'</li>
+<li><strong>nmf-path</strong> - link to plugin, default value: 'media_player.nmf'</li>
+<li><strong>latency</strong> - latency, integer</li>
+<li><strong>autohide</strong> - autohide panel of the controls after, seconds</li>
+<li><strong>volume</strong> - volume, float, Possible values: 0..1</li>
+<li><strong>avsync</strong> - If attribute exists then avsync true. If attribute does not exist then avsync false</li>
+<li><strong>controls</strong> - Panel with controls. If attribute exists then show controls. If attribute does not exist then hide controls</li>
+<li><strong>debug</strong> - Debug mode. If attribute exists then you will see a lot of messages in js console. If attribute does not exist, it will be silent</li>
+<li><strong>mute</strong> - Mute audio. If attribute exists then mute. If attribute does not exist then no mute</li>
+<li><strong>useragent-prefix</strong> - Set prefix for user agency</li>
+<li><strong>aspect-ratio</strong> - If attributes aspect-ratio or aspect-ratio-mode exist then aspectRatio true</li>
+<li><strong>aspect-ratio-mode</strong> - 1:Fit-to-Screen(default); 2:Crop; 0:Off. If attribute exists then aspectRatio true</li>
+<li><strong>auto-reconnect</strong> - If attribute auto-reconnect exists then the player will be auto reconnected on any error</li>
+<li><strong>connection-timeout</strong> - set connection timeout value in milliseconds</li>
+<li><strong>connection-udp</strong> - allow UDP connection (by default is off), 0:Off, 1:On</li>
+<li><strong>custom-digital-zoom</strong> - if this option exists then digital zoom in control disabled and it is allowing method "setCustomDigitalZoom"</li>
+</ul>
+
+<h2>JavaScript Examples</h2>
+
+<h3>Dynamically create players with options</h3>
+
+<p>Put element to your page:</p>
+
+<pre><code>&lt;div id="dynamicallyPlayers"&gt;&lt;/div&gt;
+</code></pre>
+
+<p>And below function will create the players inside element 'dynamicallyPlayers'</p>
+
+<pre><code>function createPlayer(){
+    indexPlayer++;
+    var playerId = 'vxg_media_player' + indexPlayer;
+    var div = document.createElement('div');
+    div.setAttribute("id", playerId);
+    div.setAttribute("class", "vxgplayer");
+    var runtimePlayers = document.getElementById('dynamicallyPlayers');
+    runtimePlayers.appendChild(div);
+    vxgplayer(playerId, {
+            url: '',
+            nmf_path: 'media_player.nmf',
+            nmf_src: 'pnacl/Release/media_player.nmf',
+            latency: 300000,
+            aspect_ratio_mode: 1,
+            autohide: 3,
+            controls: true,
+            connection_timeout: 5000,
+            connection_udp: 0,
+            custom_digital_zoom: false
+    }).ready(function(){
+        console.log(' =&gt;ready player '+playerId);
+        vxgplayer(playerId).src('rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov');
+        vxgplayer(playerId).play();
+        console.log(' &lt;=ready player '+playerId);
+    });
+
+}
+</code></pre>
+
+<h3>Init player and/or find player</h3>
+
+<pre><code>var player = vxgplayer('vxg_media_player1');
+// where 'vxg_media_player1' - unique id element in document
+</code></pre>
+
+<h3>Play / isPlaying</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').play(); // play
+vxgplayer('vxg_media_player1').isPlaying() // get play true of false
+// or 
+var player = vxgplayer('vxg_media_player1');
+player.play()
+player.isPlaying() // get play true of false
+</code></pre>
+
+<h3>Pause</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').pause();
+// or
+var player = vxgplayer('vxg_media_player1');
+player.pause()
+</code></pre>
+
+<h3>Stop</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').stop();
+// or
+var player = vxgplayer('vxg_media_player1');
+player.stop()
+</code></pre>
+
+<h3>Autohide</h3>
+
+<p>An autohide value of zero means the component should never be set invisible.</p>
+
+<pre><code>vxgplayer('vxg_media_player1').autohide(2); // set 2 seconds
+vxgplayer('vxg_media_player1').autohide(); // get autohide value
+// or
+var player = vxgplayer('vxg_media_player1');
+player.autohide(2); // set 2 seconds
+player.autohide(); // get autohide value
+</code></pre>
+
+<h3>Aspect Ratio</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').aspectRatio(true); // set aspect ration to true
+vxgplayer('vxg_media_player1').aspectRatio(); // get aspect ration value
+// or
+var player = vxgplayer('vxg_media_player1');
+player.aspectRatioMode(2); // set aspect ration to true. Mode: Crop
+player.aspectRatioMode(); // get aspect ratio mode value
+</code></pre>
+
+<h3>Auto reconnect</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').autoreconnect(1); // set auto-reconnect on
+vxgplayer('vxg_media_player1').autoreconnect(); // get autoreconnect value
+</code></pre>
+
+<h3>Volume</h3>
+
+<p>Possible value of volume: 0..1</p>
+
+<pre><code>// possible value of volume: from 0 to 1
+// example
+vxgplayer('vxg_media_player1').volume(0.8); // set volume
+var vol = vxgplayer('vxg_media_player1').volume(); // get volume
+// or
+var player = vxgplayer('vxg_media_player1');
+player.volume(0.8); // set volume
+var vol = player.volume(); // get volume
+</code></pre>
+
+<h3>Size</h3>
+
+<p>Set new size of player</p>
+
+<pre><code>vxgplayer('vxg_media_player1').size(1280, 720); // set size
+var size = vxgplayer('vxg_media_player1').size(); // get size
+console.log('Player width: ' + size.width);
+console.log('Player height: ' + size.height);
+// or
+var player = vxgplayer('vxg_media_player1');
+player.size(1280, 720); // set size
+var size2 = player.size(); // get size
+console.log('Player width: ' + size2.width);
+console.log('Player height: ' + size2.height);
+</code></pre>
+
+<h3>Latency</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').latency(10000); // set latency
+console.log(vxgplayer('vxg_media_player1').latency()); // get latency
+// or
+var player = vxgplayer('vxg_media_player1');
+player.latency(10000); // set latency
+var ltnc = player.latency(); // get latency
+</code></pre>
+
+<h3>Connection Timeout (ms)</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').connection_timeout(5000); // set connection_timeout 5 seconds
+console.log(vxgplayer('vxg_media_player1').connection_timeout()); // get connection_timeout
+</code></pre>
+
+<h3>Allow UDP connection</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').connection_udp(1); // allow UDP connection
+vxgplayer('vxg_media_player1').connection_udp(0); // deny UDP connection
+</code></pre>
+
+<h3>Custom Digital Zoom</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').custom_digital_zoom(); // will be return true or false
+vxgplayer('vxg_media_player1').custom_digital_zoom(true); // enable custom digital zoom
+vxgplayer('vxg_media_player1').custom_digital_zoom(false); // disable custom digital zoom
+
+If you change value custom_digital_zoom then player will be reset zoom.
+</code></pre>
+
+<h3>Change Custom Digital Zoom</h3>
+
+<p>This method will available only if <code>custom_digital_zoom()</code> is true</p>
+
+<pre><code>vxgplayer('vxg_media_player1').custom_digital_zoom(true); // enable custom digital zoom
+
+var ratio = 100; // 100..500
+var x = 0; // position in pixels
+var y = 0; // position in pixels
+vxgplayer('vxg_media_player1').setCustomDigitalZoom(ratio, x, y); // set new custom digital zoom
+</code></pre>
+
+<h3>Source / URL</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').src('rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov'); // set src
+var src = vxgplayer('vxg_media_player1').src(); // get src
+// or
+var player = vxgplayer('vxg_media_player1');
+player.src('rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov'); // set src
+var src = player.src(); // get src
+</code></pre>
+
+<h3>Error</h3>
+
+<p>This method returned last error code or -1 if has not error.</p>
+
+<pre><code>// NO_ERROR == -1
+// MEDIA_ERR_URL == 0
+// MEDIA_ERR_NETWORK == 1
+// MEDIA_ERR_SOURCE == 2
+// MEDIA_ERR_CARRIER == 3
+// MEDIA_ERR_AUDIO == 4
+// MEDIA_ERR_VIDEO == 5
+// MEDIA_ERR_AUTHENTICATION == 6
+// MEDIA_ERR_BANDWIDTH == 7
+// MEDIA_ERR_EOF == 8
+
+var err;
+
+err = vxgplayer('vxg_media_player1').error(); // get error code
+// or
+var player = vxgplayer('vxg_media_player1');
+var err = player.error(); // get error code
+
+// example of handling by code error
+switch (err) {
+    case 0:
+        // MEDIA_ERR_URL
+        break
+    case 1:
+        // MEDIA_ERR_NETWORK
+        break
+    case 2:
+        // MEDIA_ERR_SOURCE
+        break
+    case 3:
+        // MEDIA_ERR_CARRIER
+        break
+    case 4:
+        // MEDIA_ERR_AUDIO
+        break
+    case 5:
+        // MEDIA_ERR_VIDEO
+        break
+    case 6:
+        // MEDIA_ERR_AUTHENTICATION
+        break
+    case 7:
+        // MEDIA_ERR_BANDWIDTH
+        break
+    case 8:
+        // MEDIA_ERR_EOF
+        break
+    default:
+        // no error
+}
+</code></pre>
+
+<h3>Show/Hide Custom Error</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').showerror('some error'); // show error overlay
+vxgplayer('vxg_media_player1').hideerror(); // hide error overlay
+// or
+var player = vxgplayer('vxg_media_player1');
+player.showerror('some error'); // show error overlay
+player.hideerror(); // hide error overlay
+</code></pre>
+
+<h3>Controls</h3>
+
+<pre><code>var ctrls;
+
+vxgplayer('vxg_media_player1').controls(true); // set controls to true
+ctrls = vxgplayer('vxg_media_player1').controls(); // get controls (return boolean value)
+// or
+var player = vxgplayer('vxg_media_player1');
+player.controls(true); // set controls to true
+ctrls = player.controls(); // get controls (return boolean value)
+</code></pre>
+
+<h3>Debug</h3>
+
+<pre><code>var dbg;
+
+vxgplayer('vxg_media_player1').debug(true); // set debug mode
+dbg = vxgplayer('vxg_media_player1').debug(); // get debug mode
+// or
+var player = vxgplayer('vxg_media_player1');
+player.debug(true); // set debug mode
+dbg = player.debug(); // get debug mode
+</code></pre>
+
+<h3>Mute / isMute</h3>
+
+<p>Toggle method. And Getter</p>
+
+<pre><code>var mute;
+
+vxgplayer('vxg_media_player1').mute(); // toggle mute false -&gt; true and true -&gt; false
+mute = vxgplayer('vxg_media_player1').isMute(); // getter
+// or
+var player = vxgplayer('vxg_media_player1');
+player.mute();  // toggle mute false -&gt; true and true -&gt; false
+mute = player.isMute(); // get state of mute
+</code></pre>
+
+<h3>Ready State</h3>
+
+<pre><code>// possible values of readyState:
+// 0 - PLAYER_STOPPED
+// 1 - PLAYER_CONNECTING
+// 2 - PLAYER_PLAYING
+// 3 - PLAYER_STOPPING
+
+var rs;
+
+rs = vxgplayer('vxg_media_player1').readyState(); 
+// or
+var player = vxgplayer('vxg_media_player1');
+rs = player.readyState();
+// example of handling by code error
+switch (rs) {
+    case 0:
+        // PLAYER_STOPPED
+        break
+    case 1:
+        // PLAYER_CONNECTING
+        break
+    case 2:
+        // PLAYER_PLAYING
+        break
+    case 3:
+        // PLAYER_STOPPING
+        break
+    default:
+        // no ready
+}
+</code></pre>
+
+<h3>Version</h3>
+
+<pre><code>var player = vxgplayer('listener2');
+player.versionPLG(); //version of chrome plugin
+player.versionAPP(); //version of VXG Media Player app
+</code></pre>
+
+<h3>Callback onReadyStateChange</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').onReadyStateChange(function(onreadyState){
+    console.log("player LOADED: versionPLG=" + vxgplayer('vxg_media_player1').versionPLG()+" versionAPP="+vxgplayer('vxg_media_player1').versionAPP());
+});
+// or
+var player = vxgplayer('listener2');
+player.onReadyStateChange(function(state){
+    console.log("player LOADED: versionPLG=" + player.versionPLG()+" versionAPP="+player.versionAPP());
+});
+</code></pre>
+
+<h3>Callback onStateChange</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').onStateChange(function(readyState){
+    console.log("NEW READY STATE: " + readyState);
+});
+// or
+var player = vxgplayer('listener2');
+player.onStateChange(function(state){
+    console.log("NEW READY STATE: " + readyState);
+});
+</code></pre>
+
+<h3>Callback onError</h3>
+
+<pre><code>vxgplayer('vxg_media_player1').onError(function(player){
+    console.log(player.error());
+});
+// or
+var player = vxgplayer('vxg_media_player1');
+player.onError(function(player){
+    console.log(player.error());
+});
+</code></pre>
+
+<h3>Callback onBandwidthError</h3>
+
+<pre><code>// Behaviour:
+// 1. If exists handler onBandwidthError then call it.
+// 2. If not exists then show error('Problem with bandwidth')
+
+vxgplayer('vxg_media_player1').onBandwidthError(function(player){
+    console.log(player.error());
+});
+// or
+var player = vxgplayer('vxg_media_player1');
+player.onBandwidthError(function(player){
+    console.log(player.error());
+});
+</code></pre>
+			</div>
+		</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			console.log('===player.src='+vxgplayer('vxg_media_player1').src());
+			console.log('===player.volume()='+vxgplayer('vxg_media_player1').volume());
+			console.log('===player.autohide()='+vxgplayer('vxg_media_player1').autohide());
+			console.log('===player.isMute()='+vxgplayer('vxg_media_player1').isMute());
+			console.log('===player.isPlaying()='+vxgplayer('vxg_media_player1').isPlaying());
+			console.log('===player.autoreconnect()='+vxgplayer('vxg_media_player1').autoreconnect());
+			vxgplayer('vxg_media_player1').onReadyStateChange(function(onreadyState){
+				console.log("player LOADED: versionPLG=" + vxgplayer('vxg_media_player1').versionPLG()+" versionAPP="+vxgplayer('vxg_media_player1').versionAPP());
+			vxgplayer('vxg_media_player1').play();
+			});
+			vxgplayer('vxg_media_player1').onError(function(onErr){
+				console.log("player ERROR: " + vxgplayer('vxg_media_player1').error() + " decoder:"+vxgplayer('vxg_media_player1').errorDecoder());
+			});
+		})
+	</script>
+</body>
+</html>

@@ -19,8 +19,9 @@ module.exports = async (req, res) => {
 			messgae: 'Username or Password invalid'
 		});
 
+		console.log(user.username)
 		let payload = {
-			sub: user._id
+			sub: user.username
 		}
 		let token = jwt.encode(payload, '123456');
 		res.status(200).send({

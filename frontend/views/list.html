@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row top-padding">
+    <div class="col-8">
+      <h3>Select RTSP URL</h3>
+    </div>
+    <div class="col-4 align-right">
+      <a ui-sref="addNew" class="btn btn-primary">Add New</a>
+      <button ng-click="$ctrl.logout()" class="btn btn-primary">Logout</button>
+    </div>
+  </div>
+  <div class="row align-items-center">
+    <div class="col-sm">
+      <ul class="list-group">
+        <li ng-click="$ctrl.switchUrl(rtspurl.url, $index)" ng-repeat="rtspurl in $ctrl.list track by $index" class="list-group-item" ng-class="{'active': $index === $ctrl.selectedIndex}">
+          {{rtspurl.url}}
+          <span class="badge badge-success">{{rtspurl.username}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row top-padding">
+    <div class="col-12 align-center">
+      <button ng-if="$ctrl.selectedUrl" ng-click="$ctrl.watch()" class="btn btn-primary">Watch</button>
+    </div>
+  </div>
+
+</div>

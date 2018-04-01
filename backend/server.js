@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const User = require('./models/User')
 const jwt = require('jwt-simple');
 const login = require('./services/login');
 const register = require('./services/register');
@@ -21,17 +20,17 @@ function unauthorizedResponse(res, message) {
 
 function checkAuth(req, res, next) {
 	if (!req.header('Authorization')) return unauthorizedResponse(res, 'Unauthorized - missing auth header');
-
 	let token = req.header('Authorization');
 	let payload = jwt.decode(token, '123456');
-    if (!payload) return unauthorizedResponse(res, 'Auth header invalid');
-    req.userId = payload.sub;
-    next();
+	if (!payload) return unauthorizedResponse(res, 'Auth header invalid');
+	req.userName = payload.sub;
+	next();
 }
 
-app.post('/register', register)
-app.post('/login', login)
-app.post('/rtspurl', checkAuth, rtspurl)
+app.post('/register', register);
+app.post('/login', login);
+app.post('/rtspurl', checkAuth, rtspurl.add);
+app.get('/rtspurl', rtspurl.get);
 
 // serve all asset files from necessary directories
 app.use("/js", express.static(__dirname + "/../frontend/js/"));
@@ -50,3 +49,8 @@ mongoose.connect('mongodb://admin:admin@ds137464.mlab.com:37464/rtspview', err =
 })
 
 app.listen(3000);
+
+
+//************************************ RTSP ********************************* */
+
+

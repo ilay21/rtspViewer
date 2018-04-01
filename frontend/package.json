@@ -10,7 +10,10 @@
     "angular-aria": "^1.6.9",
     "bootstrap": "^4.0.0",
     "jquery": "^1.9.1",
-    "popper.js": "^1.14.1"
+    "popper.js": "^1.14.1",
+    "rollup-plugin-alias": "^1.4.0",
+    "rollup-plugin-buble": "^0.19.2",
+    "streamedian": "git://github.com/Streamedian/html5_rtsp_player.git"
   },
   "devDependencies": {},
   "scripts": {

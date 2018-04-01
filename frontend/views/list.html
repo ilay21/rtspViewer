@@ -11,9 +11,11 @@
   <div class="row align-items-center">
     <div class="col-sm">
       <ul class="list-group">
-        <li ng-click="$ctrl.switchUrl(rtspurl.url, $index)" ng-repeat="rtspurl in $ctrl.list track by $index" class="list-group-item" ng-class="{'active': $index === $ctrl.selectedIndex}">
+        <li ng-click="$ctrl.switchUrl(rtspurl.url, $index)" ng-repeat="rtspurl in $ctrl.list track by $index" class="list-group-item"
+          ng-class="{'active': $index === $ctrl.selectedIndex}">
           {{rtspurl.url}}
           <span class="badge badge-success">{{rtspurl.username}}</span>
+          <button ng-click="$ctrl.remove($event,rtspurl)" class="btn btn-sm btn-danger float-right">Delete</button>
         </li>
       </ul>
     </div>

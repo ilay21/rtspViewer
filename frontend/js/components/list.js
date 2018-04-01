@@ -26,6 +26,12 @@ angular.module("app")
       });
     }
 
+    ctrl.remove = function (e, url) {
+      e.stopImmediatePropagation();
+      $http.delete('http://localhost:3000/rtspurl/?id=' + url._id)
+        .then(fetchAllUrls);
+    }
+
     function fetchAllUrls() {
       $http.get('http://localhost:3000/rtspurl')
         .then(function (response) {

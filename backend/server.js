@@ -31,6 +31,7 @@ app.post('/register', register);
 app.post('/login', login);
 app.post('/rtspurl', checkAuth, rtspurl.add);
 app.get('/rtspurl', rtspurl.get);
+app.delete('/rtspurl', rtspurl.delete);
 
 // serve all asset files from necessary directories
 app.use("/js", express.static(__dirname + "/../frontend/js/"));
@@ -49,8 +50,3 @@ mongoose.connect('mongodb://admin:admin@ds137464.mlab.com:37464/rtspview', err =
 })
 
 app.listen(3000);
-
-
-//************************************ RTSP ********************************* */
-
-
